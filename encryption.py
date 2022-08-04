@@ -7,11 +7,20 @@ class Encryption(ABC):
         self.lookup = {}
 
     @abstractmethod
-    def encrypt(self, text: str):
+    def encrypt(self, text: str) -> str:
         pass
 
-    def decrypt(self, text: str):
+    def decrypt(self, text: str) -> str:
         pass
+
+    def encrypt_lookup(self, text: str) -> str:
+        encrypted_text = ""
+        for character in text:
+            encrypted_text += self.lookup.get(character, character)
+        return encrypted_text
+
+    def decrypt_symetric(self, text: str) -> str:
+        return self.encrypt(text)
 
     @staticmethod
     def shift_in_range(num, shift, low, high):
@@ -28,14 +37,11 @@ class Rot47(Encryption):
         for i in range(33, 126):
             self.lookup[chr(i)] = chr(self.shift_in_range(i, 47, 33, 126))
 
-    def encrypt(self, text: str):
-        encrypted_text = ""
-        for character in text:
-            encrypted_text += self.lookup.get(character, character)
-        return encrypted_text
+    def encrypt(self, text: str) -> str:
+        return self.encrypt_lookup()
 
-    def decrypt(self, text: str):
-        return self.encrypt(text)
+    def decrypt(self, text: str) -> str:
+        return self.decrypt_symetric(text)
 
 
 class Rot13(Encryption):
@@ -48,12 +54,9 @@ class Rot13(Encryption):
         for i in range(97, 122):
             self.lookup[chr(i)] = chr(self.shift_in_range(i, 13, 97, 122))
 
-    def encrypt(self, text: str):
-        encrypted_text = ""
-        for character in text:
-            encrypted_text += self.lookup.get(character, character)
-        return encrypted_text
+    def encrypt(self, text: str) -> str:
+        return self.encrypt_lookup()
 
-    def decrypt(self, text: str):
-        return self.encrypt(text)
+    def decrypt(self, text: str) -> str:
+        return self.decrypt_symetric(text)
 
