@@ -6,16 +6,12 @@ class FileHandler:
 
     def read_from_file(self):
         try:
-            file = open(self.path, "r")
-            return file.read()
+            with open(self.path, "r") as opened_file:
+                return opened_file.read()
         except FileNotFoundError:
             return ""
 
     def write_to_file(self, text):
-        try:
-            file = open(self.path, "a")
-            file.write(text)
-            file.close()
+        with open(self.path, "a") as opened_file:
+            opened_file.write(text)
             return "written successfully"
-        except FileNotFoundError:
-            return "no such file"

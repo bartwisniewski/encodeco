@@ -8,10 +8,11 @@ class Encryption(ABC):
 
     @abstractmethod
     def encrypt(self, text: str) -> str:
-        pass
+        raise NotImplementedError
 
+    @abstractmethod
     def decrypt(self, text: str) -> str:
-        pass
+        raise NotImplementedError
 
     def encrypt_lookup(self, text: str) -> str:
         encrypted_text = ""
@@ -34,11 +35,11 @@ class Rot47(Encryption):
     def __init__(self):
         super().__init__()
         self.lookup = {}
-        for i in range(33, 126):
+        for i in range(33, 127):
             self.lookup[chr(i)] = chr(self.shift_in_range(i, 47, 33, 126))
 
     def encrypt(self, text: str) -> str:
-        return self.encrypt_lookup()
+        return self.encrypt_lookup(text)
 
     def decrypt(self, text: str) -> str:
         return self.decrypt_symetric(text)
@@ -49,14 +50,24 @@ class Rot13(Encryption):
     def __init__(self):
         super().__init__()
         self.lookup = {}
-        for i in range(65, 90):
+        for i in range(65, 91):
             self.lookup[chr(i)] = chr(self.shift_in_range(i, 13, 65, 90))
-        for i in range(97, 122):
+        for i in range(97, 123):
             self.lookup[chr(i)] = chr(self.shift_in_range(i, 13, 97, 122))
 
     def encrypt(self, text: str) -> str:
-        return self.encrypt_lookup()
+        return self.encrypt_lookup(text)
 
     def decrypt(self, text: str) -> str:
         return self.decrypt_symetric(text)
 
+
+class EncryptionFactory:
+    encryption_classes = {0: Rot47, 1: Rot13}
+    encryption_names = {0: "Rot47", 1: "Rot13"}
+
+    def __init__(self):
+        pass
+
+    def create(self, index: int) -> Encryption:
+        return self.encryption_classes.get(index)()
