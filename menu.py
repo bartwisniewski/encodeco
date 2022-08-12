@@ -1,7 +1,5 @@
 
 class ConsoleMenu:
-    def __init__(self):
-        pass
 
     @staticmethod
     def select(description: str, selections: list) -> int:
@@ -15,7 +13,7 @@ class ConsoleMenu:
         return input1
 
     @staticmethod
-    def get_text(description) -> str:
+    def get_text(description: str) -> str:
         print(description)
         input1 = input("enter:")
         return input1

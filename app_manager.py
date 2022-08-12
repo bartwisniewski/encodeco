@@ -5,67 +5,64 @@ from file_handler import FileHandler
 
 
 class AppManager:
-    selections = ["encrypt", "decrypt", "peek buffer", "save to file", "exit"]
-    encryption_types = ["ROT47", "ROT13"]
+    SELECTIONS = ["encrypt", "decrypt", "peek buffer", "save to file", "exit"]
+    ENCRYPTION_FACTORY = EncryptionFactory()
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.buffer = Buffer("")
-        self.encryption_factory = EncryptionFactory()
         self.menu = ConsoleMenu()
-        self.main_menu()
+        self.is_running = True
+        self.__main_menu()
 
-    def main_menu(self):
-        selection = self.menu.select(description="What would you like to do?", selections=self.selections)
-        self.call_selection(selection)
+    def __main_menu(self) -> None:
+        while self.is_running:
+            selection = self.menu.select(description="What would you like to do?", selections=AppManager.SELECTIONS)
+            self.__call_selection(selection)
 
-    def call_selection(self, selection: int):
-        sel_methods = [self. encrypt, self.decrypt, self.peek_buffer, self.save_to_file, self.exit]
+    def __call_selection(self, selection: int) -> None:
+        sel_methods = [self.__encrypt, self.__decrypt, self.__peek_buffer, self.__save_to_file, self.__exit]
         sel_methods[selection]()
 
-    def encrypt(self):
-        selection = self.menu.select("Select encryption", self.encryption_types)
-        encryptor = self.encryption_factory.create(index=selection)
+    def __encrypt(self) -> None:
+        selection = self.menu.select("Select encryption", AppManager.ENCRYPTION_FACTORY.ENCRYPTION_NAMES)
+        encryptor = AppManager.ENCRYPTION_FACTORY.get_encryption_object(index=selection)
         text = self.menu.get_text("Enter text to encrypt")
         print(encryptor.__class__.__name__)
         encrypted_text = encryptor.encrypt(text)
         self.buffer.write(encrypted_text)
-        self.main_menu()
 
-    def decrypt(self):
-        selection = self.menu.select("Select encryption", self.encryption_types)
-        decryptor = self.encryption_factory.create(index=selection)
+    def __decrypt(self) -> None:
+        selection = self.menu.select("Select encryption", AppManager.ENCRYPTION_FACTORY.ENCRYPTION_NAMES)
+        decryptor = AppManager.ENCRYPTION_FACTORY.get_encryption_object(index=selection)
         path = self.menu.get_text("give path to the file")
         file_handler = FileHandler(path)
         text = file_handler.read_from_file()
         print("decrypted text:")
         print(decryptor.decrypt(text))
-        self.main_menu()
 
-    def peek_buffer(self):
+    def __peek_buffer(self) -> None:
         print(self.buffer)
-        self.main_menu()
 
-    def save_to_file(self):
+    def __save_to_file(self) -> None:
         path = self.menu.get_text("give path to the file")
         file_handler = FileHandler(path)
         file_handler.write_to_file(self.buffer.buffer)
         self.buffer.clear()
-        self.main_menu()
 
-    @staticmethod
-    def exit():
+    def __exit(self) -> None:
         print("Bye bye")
+        self.is_running = False
 
 
 @dataclass
 class Buffer:
     buffer: str
 
-    def write(self, text: str):
+    def write(self, text: str) -> None:
         self.buffer += text
 
-    def clear(self):
+    def clear(self) -> None:
         self.buffer = ""
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.buffer
