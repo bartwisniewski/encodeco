@@ -40,7 +40,7 @@ class AppManager:
         print("decrypted text:")
         print(decryptor.decrypt(text))
 
-    def __peek_buffer(self) -> None:
+    def __peek_buffer(self) -> None:  # TEST
         print(self.buffer)
 
     def __save_to_file(self) -> None:
