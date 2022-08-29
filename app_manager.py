@@ -12,9 +12,8 @@ class AppManager:
         self.buffer = Buffer("")
         self.menu = ConsoleMenu()
         self.is_running = True
-        self.__main_menu()
 
-    def __main_menu(self) -> None:
+    def main_menu(self) -> None:
         while self.is_running:
             selection = self.menu.select(description="What would you like to do?", selections=AppManager.SELECTIONS)
             self.__call_selection(selection)
