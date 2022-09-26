@@ -12,9 +12,8 @@ class AppManager:
         self.buffer = Buffer("")
         self.menu = ConsoleMenu()
         self.is_running = True
-        self.__main_menu()
 
-    def __main_menu(self) -> None:
+    def main_menu(self) -> None:
         while self.is_running:
             selection = self.menu.select(description="What would you like to do?", selections=AppManager.SELECTIONS)
             self.__call_selection(selection)
@@ -40,7 +39,7 @@ class AppManager:
         print("decrypted text:")
         print(decryptor.decrypt(text))
 
-    def __peek_buffer(self) -> None:
+    def __peek_buffer(self) -> None:  # TEST
         print(self.buffer)
 
     def __save_to_file(self) -> None:

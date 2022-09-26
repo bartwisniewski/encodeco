@@ -4,7 +4,7 @@ class FileHandler:
     def __init__(self, path: str):
         self.path = path
 
-    def read_from_file(self) -> str:
+    def read_from_file(self) -> str:  # TEST
         try:
             with open(self.path, "r") as opened_file:
                 return opened_file.read()
